@@ -7,7 +7,7 @@ except ImportError:  # pragma: nocover
 from typing import ClassVar, Dict, Optional
 from urllib.parse import urljoin
 
-from jinja2 import Markup
+from markupsafe import Markup
 
 from fastapi_vite.config import settings
 
