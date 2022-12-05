@@ -10,13 +10,11 @@ class ViteSettings(BaseSettings):
     static_url: Optional[str]
 
     @validator("static_url", pre=True)
-    def ensure_slash_for_static_url(
-        cls, v: Optional[str], values: Dict[str, Any]
-    ) -> str:
-        if v and v.endswith("/"):
-            return v
-        elif v:
-            return f"{v}/"
+    def ensure_slash_for_static_url(cls, value: Optional[str], values: Dict[str, Any]) -> str:
+        if value and value.endswith("/"):
+            return value
+        elif value:
+            return f"{value}/"
         return "/static/"
 
     static_path: str = "static/"
@@ -24,9 +22,9 @@ class ViteSettings(BaseSettings):
     is_react: bool = False
 
     @validator("hot_reload", pre=True)
-    def detect_serve_mode(cls, v: Optional[bool], values: Dict[str, Any]) -> str:
-        if v:
-            return v
+    def detect_serve_mode(cls, value: Optional[bool], values: Dict[str, Any]) -> str:
+        if value:
+            return value
         elif values.get("DEBUG", None):
             return True
         return False
@@ -35,12 +33,8 @@ class ViteSettings(BaseSettings):
     manifest_path: Optional[str]
 
     @validator("manifest_path", pre=True, always=True)
-    def assemble_manifest_path(cls, v: Optional[str], values: Dict[str, Any]) -> str:
-        path: str = (
-            values.get("assets_path")
-            if values.get("hot_reload")
-            else values.get("static_path")
-        )
+    def assemble_manifest_path(cls, value: Optional[str], values: Dict[str, Any]) -> str:
+        path: str = values.get("assets_path") if values.get("hot_reload") else values.get("static_path")
         return f"{path}/manifest.json"
 
     server_host: str = "localhost"
