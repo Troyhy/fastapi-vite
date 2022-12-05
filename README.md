@@ -75,7 +75,7 @@ export default defineConfig({
 \*render_vite_hmr no-op when in production.
 
 ```html
-{{ render_vite_hmr_client() }}
+{{ vite_hmr_client() }}
 
 <script
   type="text/javascript"
