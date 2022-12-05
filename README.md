@@ -22,7 +22,7 @@ pip install fastapi-vite
 
 Configure Jinja templating for FastAPI
 
-```python
+``` python
 import fastapi_vite
 
 templates = Jinja2Templates(directory='templates')
@@ -35,7 +35,7 @@ templates.env.globals['vite_asset'] = fastapi_vite.vite_asset
 
 Here is an example used to test this plugin
 
-```javascript
+``` javascript
 import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 const Dotenv = require("dotenv");
@@ -69,6 +69,20 @@ export default defineConfig({
 ```
 
 ### Configure Static Assets
+
+Configure with `.env` file with these settings
+
+| Option           | Default     | Explanation            |
+|------------------|-------------|------------------------|
+| VITE_SERVER_HOST | "localhost" | Vite server host       |
+| SERVER_PROTOCOL  | "http"      | Vite server protocol   |
+| SERVER_PORT      | 5173        | Vite server port       |
+| ASSETS_PATH      | "static/"   |                        |
+| MANIFEST_PATH    | -           |                        |
+| STATIC_PATH      | "static/"   |                        |
+| HOT_RELOAD       | -           | Autodetect from DEBUG  |
+| IS_REACT         | False       |                        |
+
 
 ### Configure Templates
 

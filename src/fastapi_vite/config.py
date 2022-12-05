@@ -39,7 +39,7 @@ class ViteSettings(BaseSettings):
 
     server_host: str = "localhost"
     server_protocol: str = "http"
-    server_port: int = 3000
+    server_port: int = 5173
 
     class Config:
         case_sensitive = False
