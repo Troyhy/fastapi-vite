@@ -36,11 +36,14 @@ templates.env.globals['vite_asset'] = fastapi_vite.vite_asset
 Here is an example used to test this plugin
 
 ``` javascript
-import { defineConfig } from 'vite'
+// vite.config.js
+import {defineConfig} from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
-const Dotenv = require("dotenv");
 import path from "path";
-Dotenv.config({ path: path.join(__dirname, ".env") });
+
+const Dotenv = require("dotenv");
+
+Dotenv.config({path: path.join(__dirname, ".env")});
 
 const STATIC_URL = process.env.STATIC_URL;
 // https://vitejs.dev/config/
@@ -48,9 +51,32 @@ export default defineConfig({
   base: `${STATIC_URL}`,
   clearScreen: false,
   plugins: [
-    reactRefresh(),
-
+    reactRefresh(),  // for react
+    vue()  // for vue
   ],
+  resolve: {
+    alias: {
+      // allow use of @ in import statements
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  server: {
+    // server setting sto work around access-control-allow-origin problems in dev
+    fs: {
+      strict: false,
+      allow: [
+        // search up for workspace root
+        searchForWorkspaceRoot(process.cwd()),
+        // your custom rules
+        "../static/assets",
+      ],
+    },
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+    },
+  },
   build: {
     target: "esnext",
     outDir: "./static/",
@@ -58,8 +84,13 @@ export default defineConfig({
     assetsDir: "",
     manifest: true,
     rollupOptions: {
-      input:  "./assets/javascript/main.tsx"
-    },
+      input: {
+        main: resolve("./src/main.js"),
+      },
+      output: {
+        chunkFileNames: undefined,
+      },
+    }
   },
 
   root: ".", // You can change the root path as you wish
@@ -89,11 +120,22 @@ Configure with `.env` file with these settings
 \*render_vite_hmr no-op when in production.
 
 ```html
-{{ vite_hmr_client() }}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!--IE compatibility-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+  </head>
 
-<script
-  type="text/javascript"
-  defer
-  src="{{ asset_url('javascript/main.tsx') }}"
-></script>
+  <body>
+    <div id="app"></div>
+    {{ vite_hmr_client() }}
+    {{ vite_asset('src/main.js') }}
+  </body>
+</html>
 ```
